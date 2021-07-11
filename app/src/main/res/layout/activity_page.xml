@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".PageFragment"
+android:orientation="vertical">
+
+
+<LinearLayout
+    android:id="@+id/VeterinaryHelpLinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="15dp"
+    android:layout_below="@+id/VeterinaryHelpRelativeLayout"
+    android:orientation="horizontal"
+    android:gravity="center"
+    >
+
+    <ImageView
+        android:id="@+id/Rescue"
+        android:layout_width="150dp"
+        android:layout_height="110dp"
+        android:src="@drawable/rescue"
+        tools:ignore="ContentDescription"
+        />
+
+    <ImageView
+        android:id="@+id/Adopt"
+        android:layout_width="150dp"
+        android:layout_height="110dp"
+        android:src="@drawable/adopt"
+        tools:ignore="ContentDescription"
+        />
+</LinearLayout>
+
+<LinearLayout
+    android:id="@+id/VeterinaryHelpLinearLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/VeterinaryHelpLinearLayout"
+    android:orientation="horizontal"
+    android:gravity="center"
+    >
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:textSize="16dp"
+        android:textColor="@color/primary_txt"
+        android:text="Rescue"
+        />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textColor="@color/primary_txt"
+        android:text="Adopt"
+        />
+</LinearLayout>
+
+<LinearLayout
+    android:id="@+id/VeterinaryHelpLinearLayout3"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/VeterinaryHelpLinearLayout2"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_marginTop="15dp"
+    >
+
+    <ImageView
+        android:id="@+id/NearbyHelp"
+        android:layout_width="150dp"
+        android:layout_height="110dp"
+        android:src="@drawable/maplocation"
+        tools:ignore="ContentDescription"
+        />
+
+    <ImageView
+        android:id="@+id/PetCare"
+        android:layout_width="150dp"
+        android:layout_height="110dp"
+        android:src="@drawable/vets"
+        tools:ignore="ContentDescription"
+        />
+</LinearLayout>
+
+<LinearLayout
+    android:id="@+id/VeterinaryHelpLinearLayout4"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/VeterinaryHelpLinearLayout3"
+    android:orientation="horizontal"
+    android:gravity="center"
+    >
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textColor="@color/primary_txt"
+        android:text="Nearby Help"
+        />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textColor="@color/primary_txt"
+        android:text="Pet Care"
+        />
+</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/VeterinaryHelpLinearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/VeterinaryHelpLinearLayout4"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        >
+
+        <ImageView
+            android:id="@+id/Vaccine"
+            android:layout_width="150dp"
+            android:layout_height="110dp"
+            android:src="@drawable/medicinestores"
+            tools:ignore="ContentDescription"
+            />
+
+        <ImageView
+            android:id="@+id/AboutUs"
+            android:layout_width="150dp"
+            android:layout_height="110dp"
+            android:src="@drawable/aboutus"
+            tools:ignore="ContentDescription"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/VeterinaryHelpLinearLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/VeterinaryHelpLinearLayout5"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:gravity="center_horizontal"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:textColor="@color/primary_txt"
+            android:text="Vaccine"
+            />
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:gravity="center_horizontal"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:textColor="@color/primary_txt"
+            android:text="About Us"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>
