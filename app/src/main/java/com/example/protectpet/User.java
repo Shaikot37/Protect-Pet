@@ -2,14 +2,14 @@ package com.example.protectpet;
 
 public class User {
 
-    public String image,name;
+    public String image,username;
 
     public User(){
 
     }
-    public User(String image, String name) {
+    public User(String image, String username) {
         this.image = image;
-        this.name = name;
+        this.username = username;
     }
 
     public String getImage() {
@@ -21,10 +21,10 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String username) {
+        this.username = username;
     }
 }

@@ -16,6 +16,8 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Objects;
+
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
      NotificationManager mNotificationManager;
@@ -39,9 +41,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         long[] pattern = {100, 300, 300, 300};
         v.vibrate(pattern, -1);
 
-
-        int resourceImage = getResources().getIdentifier(remoteMessage.getNotification().getIcon(), "drawable", getPackageName());
-
+        try {
+            int resourceImage = getResources().getIdentifier(Objects.requireNonNull(remoteMessage.getNotification()).getIcon(), "drawable", getPackageName());
 
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "notification");
@@ -52,7 +53,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 //            builder.setSmallIcon(R.drawable.icon_kritikar);
             builder.setSmallIcon(resourceImage);
         }
-
 
 
         Intent resultIntent = new Intent(this, MainActivity.class);
@@ -87,6 +87,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         mNotificationManager.notify(100, builder.build());
 
 
+        } catch (Exception e){
+
+        }
     }
 
 }

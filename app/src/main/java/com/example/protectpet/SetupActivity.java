@@ -28,6 +28,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,15 +49,12 @@ public class SetupActivity extends AppCompatActivity {
     private EditText setupName;
     private Button setupBtn;
     private ProgressBar setupProgress;
-    private EditText sts;
+    private EditText bio;
 
     private FirebaseFirestore firebaseFirestore; //create particuler user account
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
-
-
-    private Bitmap compressedImageFile;
-
+    private DatabaseReference reference;
 
     private Uri mainImageURI = null;
 
@@ -80,7 +79,7 @@ public class SetupActivity extends AppCompatActivity {
         setupName = findViewById(R.id.setup_name);
         setupBtn = findViewById(R.id.setup_btn);
         userlocation = findViewById(R.id.spinner);
-        sts = findViewById(R.id.setup_status);
+        bio = findViewById(R.id.setup_bio);
         setupProgress = findViewById(R.id.setup_progress);
 
         setupProgress.setVisibility(View.INVISIBLE);
@@ -114,12 +113,12 @@ public class SetupActivity extends AppCompatActivity {
     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
            if(task.isSuccessful()){
                if(task.getResult().exists()){
-                        String name =task.getResult().getString("name");
+                        String name = task.getResult().getString("username");
                         String image = task.getResult().getString("image");
-                        String status  =task.getResult().getString("status");
+                        String status = task.getResult().getString("bio");
                         mainImageURI = Uri.parse(image);
                         setupName.setText(name);
-                        sts.setText(status);
+                        bio.setText(status);
 
                    RequestOptions placeholderRequest = new RequestOptions();
                    placeholderRequest.placeholder(R.drawable.user);
@@ -143,12 +142,11 @@ public class SetupActivity extends AppCompatActivity {
 
             public void onClick(View view) {
                 final String user_name = setupName.getText().toString();
-                final String status = sts.getText().toString();
-                if (!TextUtils.isEmpty(user_name) && !TextUtils.isEmpty(status) && mainImageURI != null) {
+                final String biography = bio.getText().toString();
+                if (!TextUtils.isEmpty(user_name) && !TextUtils.isEmpty(biography) && mainImageURI != null) {
                 setupProgress.setVisibility(View.VISIBLE);
+
                 if(isChanged) {
-
-
 
                         user_id = firebaseAuth.getCurrentUser().getUid();
                         StorageReference image_path = storageReference.child("profile_images").child(user_id + ".jpg");
@@ -157,7 +155,7 @@ public class SetupActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                                 if (task.isSuccessful()) {
 
-                                    storeFirestore(task, user_name,status);
+                                    storeFirestore(task, user_name, biography);
 
                                 } else {
                                     String error = task.getException().getMessage();
@@ -169,12 +167,12 @@ public class SetupActivity extends AppCompatActivity {
                         });
                     }
                 else{
-                    storeFirestore(null,user_name,status);
+                    storeFirestore(null,user_name,biography);
                 }
                 }
             }
 
-            private void storeFirestore(Task<UploadTask.TaskSnapshot> task, String user_name, String status) {
+            private void storeFirestore(Task<UploadTask.TaskSnapshot> task, String user_name, String biography) {
                 Uri download_uri;
 
                 if(task != null) {
@@ -187,11 +185,18 @@ public class SetupActivity extends AppCompatActivity {
 
                 }
 
+                reference = FirebaseDatabase.getInstance("https://cse499-3dd6a-default-rtdb.firebaseio.com/").getReference("Users").child(user_id);
+
                 Map<String, String> userMap = new HashMap<>();
-                userMap.put("name", user_name);
+                userMap.put("id", user_id);
+                userMap.put("username", user_name);
                 userMap.put("image", download_uri.toString());
-                userMap.put("status",status);
+                userMap.put("bio",biography);
                 userMap.put("location", loc);
+                userMap.put("status", "offline");
+                userMap.put("search", user_name.toLowerCase());
+
+                reference.setValue(userMap);
 
                 firebaseFirestore.collection("Users").document(user_id).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

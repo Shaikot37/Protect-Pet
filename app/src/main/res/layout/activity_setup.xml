@@ -48,7 +48,7 @@
         app:layout_constraintTop_toBottomOf="@+id/setup_image" />
 
     <EditText
-        android:id="@+id/setup_status"
+        android:id="@+id/setup_bio"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -57,7 +57,7 @@
         android:layout_marginTop="0dp"
         android:background="@drawable/rounted_3"
         android:ems="10"
-        android:hint="Your Status"
+        android:hint="Your Bio"
         android:inputType="textPersonName"
         android:padding="10dp"
         android:textColor="@color/bluebarry"
@@ -78,7 +78,7 @@
         android:layout_marginTop="8dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/setup_status"
+        app:layout_constraintTop_toBottomOf="@+id/setup_bio"
         tools:ignore="MissingConstraints">
 
         <TextView
