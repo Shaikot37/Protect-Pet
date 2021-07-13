@@ -18,7 +18,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
  * A simple {@link Fragment} subclass.
  */
 public class AccountFragment extends Fragment {
-    TextView pro_description,pro_price,pro_name;
+    TextView pro_description,pro_name;
     ImageView pro_image;
     CollapsingToolbarLayout collapsingToolbarLayout;
     ElegantNumberButton elegantNumberButton;

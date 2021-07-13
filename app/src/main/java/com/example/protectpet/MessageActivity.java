@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.protectpet.fragment.ProfileFragment;
+import com.example.protectpet.models.User;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -61,15 +63,15 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 try {
-                username.setText(user.getName());
+                username.setText(user.getUsername());
 
 
-                    if (user.getImage().equals("default")) {
+                    if (user.getImageURL().equals("default")) {
                         profile_image.setImageResource(R.drawable.user);
                     } else {
 
                         //change this
-                        Glide.with(getApplicationContext()).load(user.getImage()).into(profile_image);
+                        Glide.with(getApplicationContext()).load(user.getImageURL()).into(profile_image);
                     }
                 }
                 catch(Exception e){

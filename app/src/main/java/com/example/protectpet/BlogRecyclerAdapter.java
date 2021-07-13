@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.protectpet.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -79,17 +80,16 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         viewHolder.setBlogImage(image_url, thumbUri);
 
 
-
         String blog_user_id = blog_list.get(i).getUser_id();
-        if (blog_user_id.equals(currentUserId)) {
-            viewHolder.blogDelBtn.setEnabled(true);
-            viewHolder.blogDelBtn.setVisibility(View.VISIBLE);
+
+
+        try {
+            String userName = user_list.get(i).getUsername();
+            String userImage = user_list.get(i).getImageURL();
+            viewHolder.setUserData(userName, userImage);
+        } catch (Exception e) {
+
         }
-
-
-        String userName = user_list.get(i).getName();
-        String userImage = user_list.get(i).getImage();
-        viewHolder.setUserData(userName, userImage);
 
 
         try {
@@ -175,21 +175,6 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             }
         });
 
-
-        viewHolder.blogDelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseFirestore.collection("Posts").document(blogPostId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-
-                        blog_list.remove(i);
-                        user_list.remove(i);
-
-                    }
-                });
-            }
-        });
     }
 
     @Override
@@ -232,7 +217,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             blog_image_view = mview.findViewById(R.id.blog_image);
 
             RequestOptions requestOptions = new RequestOptions();
-            requestOptions.placeholder(R.drawable.image_placeholder);
+            //requestOptions.placeholder(R.drawable.image_placeholder);
 
             Glide.with(context1).applyDefaultRequestOptions(requestOptions).load(downloadUri).thumbnail(
                     Glide.with(context1).load(thumbUri)
@@ -255,8 +240,6 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
             blogUserName.setText(name);
 
-            RequestOptions placeholderOption = new RequestOptions();
-            placeholderOption.placeholder(R.drawable.profile_placeholder);
             Glide.with(context1).load(image).into(blogUserImage);
 
         }

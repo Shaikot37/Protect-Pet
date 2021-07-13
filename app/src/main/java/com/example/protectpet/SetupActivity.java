@@ -114,14 +114,13 @@ public class SetupActivity extends AppCompatActivity {
            if(task.isSuccessful()){
                if(task.getResult().exists()){
                         String name = task.getResult().getString("username");
-                        String image = task.getResult().getString("image");
+                        String image = task.getResult().getString("imageURL");
                         String status = task.getResult().getString("bio");
                         mainImageURI = Uri.parse(image);
                         setupName.setText(name);
                         bio.setText(status);
 
                    RequestOptions placeholderRequest = new RequestOptions();
-                   placeholderRequest.placeholder(R.drawable.user);
                    Glide.with(SetupActivity.this).setDefaultRequestOptions(placeholderRequest ).load(image).into(setupImage);
                   // Toast.makeText(SetupActivity.this,"data exixts",Toast.LENGTH_LONG).show();
                }
@@ -190,7 +189,7 @@ public class SetupActivity extends AppCompatActivity {
                 Map<String, String> userMap = new HashMap<>();
                 userMap.put("id", user_id);
                 userMap.put("username", user_name);
-                userMap.put("image", download_uri.toString());
+                userMap.put("imageURL", download_uri.toString());
                 userMap.put("bio",biography);
                 userMap.put("location", loc);
                 userMap.put("status", "offline");
