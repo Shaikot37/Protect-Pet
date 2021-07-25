@@ -96,8 +96,8 @@ public class CommentsRecyclerAdapter extends RecyclerView.Adapter<CommentsRecycl
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private View mView;
-private TextView blogCommentsCount;
-private TextView comment_date;
+        private TextView blogCommentsCount;
+        private TextView comment_date;
         private TextView comment_message;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

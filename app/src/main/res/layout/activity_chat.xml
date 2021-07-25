@@ -32,6 +32,7 @@
                 android:layout_marginLeft="25dp"
                 android:textColor="#fff"
                 android:textStyle="bold"
+                android:text="Name"
                 android:layout_marginStart="25dp" />
 
         </androidx.appcompat.widget.Toolbar>

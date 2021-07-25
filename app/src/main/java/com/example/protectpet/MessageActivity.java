@@ -63,7 +63,8 @@ public class MessageActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 try {
-                username.setText(user.getUsername());
+                    assert user != null;
+                    username.setText(user.getUsername());
 
 
                     if (user.getImageURL().equals("default")) {
@@ -97,9 +98,10 @@ public class MessageActivity extends AppCompatActivity {
                 int unread = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Chat chat = snapshot.getValue(Chat.class);
-                    if (chat.getReceiver().equals(firebaseUser.getUid()) && !chat.isIsseen()){
+                    try{if (chat.getReceiver().equals(firebaseUser.getUid()) && !chat.isIsseen()){
                         unread++;
-                    }
+                    }}
+                    catch (Exception e){}
                 }
 
                 if (unread == 0){

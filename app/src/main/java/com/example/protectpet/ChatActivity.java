@@ -117,12 +117,14 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
-        reference = FirebaseDatabase.getInstance("https://cse499-3dd6a-default-rtdb.firebaseio.com/").getReference("Users").child(userid);
+        try{reference = FirebaseDatabase.getInstance("https://cse499-3dd6a-default-rtdb.firebaseio.com/").getReference("Users").child(userid);
+
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
+                assert user != null;
                 username.setText(user.getUsername());
 
                 Glide.with(getApplicationContext()).load(user.getImageURL()).into(profile_image);
@@ -135,23 +137,26 @@ public class ChatActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });}
+        catch (Exception e){}
 
         seenMessage(userid);
     }
 
     private void seenMessage(final String userid){
-        reference = FirebaseDatabase.getInstance("https://cse499-3dd6a-default-rtdb.firebaseio.com/").getReference("Chats");
+        try{reference = FirebaseDatabase.getInstance("https://cse499-3dd6a-default-rtdb.firebaseio.com/").getReference("Chats");}
+        catch (Exception e){}
         seenListener = reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Chat chat = snapshot.getValue(Chat.class);
-                    if (chat.getReceiver().equals(fuser.getUid()) && chat.getSender().equals(userid)){
+                    try{if (chat.getReceiver().equals(fuser.getUid()) && chat.getSender().equals(userid)){
                         HashMap<String, Object> hashMap = new HashMap<>();
                         hashMap.put("isseen", true);
                         snapshot.getRef().updateChildren(hashMap);
-                    }
+                    }}
+                    catch (Exception e){}
                 }
             }
 
@@ -175,6 +180,7 @@ public class ChatActivity extends AppCompatActivity {
         reference.child("Chats").push().setValue(hashMap);
 
 
+        try{
         // add user to chat fragment
         final DatabaseReference chatRef = FirebaseDatabase.getInstance("https://cse499-3dd6a-default-rtdb.firebaseio.com/").getReference("Chatlist")
                 .child(fuser.getUid())
@@ -198,6 +204,8 @@ public class ChatActivity extends AppCompatActivity {
                 .child(userid)
                 .child(fuser.getUid());
         chatRefReceiver.child("id").setValue(fuser.getUid());
+        }
+        catch (Exception e){}
 
         final String msg = message;
 
@@ -221,7 +229,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void sendNotifiaction(String receiver, final String username, final String message){
         DatabaseReference tokens = FirebaseDatabase.getInstance("https://cse499-3dd6a-default-rtdb.firebaseio.com/").getReference("Tokens");
-        Query query = tokens.orderByKey().equalTo(receiver);
+        try{Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -255,7 +263,8 @@ public class ChatActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });}
+        catch (Exception e){}
     }
 
     private void readMesagges(final String myid, final String userid, final String imageurl){
@@ -268,10 +277,11 @@ public class ChatActivity extends AppCompatActivity {
                 mchat.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Chat chat = snapshot.getValue(Chat.class);
-                    if (chat.getReceiver().equals(myid) && chat.getSender().equals(userid) ||
+                    try{if (chat.getReceiver().equals(myid) && chat.getSender().equals(userid) ||
                             chat.getReceiver().equals(userid) && chat.getSender().equals(myid)){
                         mchat.add(chat);
-                    }
+                    }}
+                    catch (Exception e){}
 
                     messageAdapter = new MessageAdapter(ChatActivity.this, mchat, imageurl);
                     recyclerView.setAdapter(messageAdapter);

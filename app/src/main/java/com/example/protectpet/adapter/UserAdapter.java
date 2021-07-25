@@ -10,10 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.protectpet.ChatActivity;
+import com.example.protectpet.fragment.BottomSheetProfileDetailUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +37,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private Context mContext;
     private List<User> mUsers;
     private boolean ischat;
+    private BottomSheetProfileDetailUser bottomSheetProfileDetailUser;
 
     String theLastMessage;
 
@@ -54,9 +58,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         final User user = mUsers.get(position);
+        final String imageUrl = user.getImageURL();
+        final String userName = user.getUsername();
+        final String bio = user.getBio();
+
         holder.username.setText(user.getUsername());
 
         Glide.with(mContext).load(user.getImageURL()).into(holder.profile_image);
+
+        holder.profile_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetProfileDetailUser = new BottomSheetProfileDetailUser(userName, imageUrl, bio, mContext);
+                FragmentManager manager = ((AppCompatActivity) mContext).getSupportFragmentManager();
+                bottomSheetProfileDetailUser.show(manager, "edit");
+            }
+        });
 
 
         if (ischat){
@@ -86,6 +103,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 mContext.startActivity(intent);
             }
         });
+
     }
 
     @Override
@@ -124,10 +142,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Chat chat = snapshot.getValue(Chat.class);
                    if (firebaseUser != null && chat != null) {
-                        if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userid) ||
+                        try{if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userid) ||
                                 chat.getReceiver().equals(userid) && chat.getSender().equals(firebaseUser.getUid())) {
                             theLastMessage = chat.getMessage();
-                        }
+                        }}
+                        catch (Exception e){}
                     }
                 }
 

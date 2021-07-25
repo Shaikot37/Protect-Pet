@@ -12,10 +12,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.protectpet.fragment.BottomSheetProfileDetailUser;
 import com.example.protectpet.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,6 +44,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
     private List<User> user_list;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
+    private BottomSheetProfileDetailUser bottomSheetProfileDetailUser;
     public Context context1;
 
     public BlogRecyclerAdapter(List<BlogPost> blog_list, List<User> user_list) {
@@ -83,13 +87,12 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         String blog_user_id = blog_list.get(i).getUser_id();
 
 
-        try {
-            String userName = user_list.get(i).getUsername();
-            String userImage = user_list.get(i).getImageURL();
-            viewHolder.setUserData(userName, userImage);
-        } catch (Exception e) {
 
-        }
+            final String userName = user_list.get(i).getUsername();
+            final String userImage = user_list.get(i).getImageURL();
+            viewHolder.setUserData(userName, userImage);
+            final String bio = user_list.get(i).getBio();
+
 
 
         try {
@@ -175,6 +178,33 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             }
         });
 
+
+        viewHolder.blogUserImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context1, ChatActivity.class);
+                context1.startActivity(intent);
+            }
+        });
+
+        viewHolder.blogUserImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetProfileDetailUser = new BottomSheetProfileDetailUser(userName, userImage, bio, context1);
+                FragmentManager manager = ((AppCompatActivity) context1).getSupportFragmentManager();
+                bottomSheetProfileDetailUser.show(manager, "edit");
+            }
+        });
+
+        viewHolder.blogUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetProfileDetailUser = new BottomSheetProfileDetailUser(userName, userImage, bio, context1);
+                FragmentManager manager = ((AppCompatActivity) context1).getSupportFragmentManager();
+                bottomSheetProfileDetailUser.show(manager, "edit");
+            }
+        });
+
     }
 
     @Override
@@ -204,6 +234,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             blogDelBtn = mview.findViewById(R.id.blog_delete_btn);
 
             blog_image_view = mview.findViewById(R.id.blog_image);
+
         }
 
         public void setDescText(String descText){
