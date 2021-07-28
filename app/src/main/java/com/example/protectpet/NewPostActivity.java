@@ -1,7 +1,14 @@
 package com.example.protectpet;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,6 +25,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -38,6 +46,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -63,8 +73,13 @@ public class NewPostActivity extends AppCompatActivity {
     private String current_user_id;
     private String type, userlocation;
 
+    private double latitude;
+    private double longitude;
+    private Location mLastLocation;
+    Geocoder geocoder;
+    List<Address> addresses;
+
     String[] post_type={"Random","Adopt","Rescue"};
-    String[] locations={"Dhaka","Khulna","Barishal"};
 
 
 
@@ -80,21 +95,18 @@ public class NewPostActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
-
+        geocoder = new Geocoder(this, Locale.getDefault());
 
         current_user_id = firebaseAuth.getCurrentUser().getUid();
         newPostImage = findViewById(R.id.new_post_image);
         newPostDesc = findViewById(R.id.new_post_desc);
         newPostType = findViewById(R.id.spinner);
-        newLocation = findViewById(R.id.spinner2);
         newPostBtn = findViewById(R.id.post_btn);
         newPostProgress = findViewById(R.id.new_post_progress);
 
 
 
         final ArrayAdapter data = new ArrayAdapter(this,android.R.layout.simple_spinner_item,post_type);
-        final ArrayAdapter data2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,locations);
-
 
         data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         newPostType.setAdapter(data);
@@ -113,25 +125,6 @@ public class NewPostActivity extends AppCompatActivity {
 
             }
         });
-
-
-        data2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        newLocation.setAdapter(data2);
-        newLocation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-
-                userlocation = data2.getItem(arg2).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-
-            }
-        });
-
 
 
 
@@ -231,13 +224,23 @@ public class NewPostActivity extends AppCompatActivity {
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                                         String downloadthumbUri = taskSnapshot.getDownloadUrl().toString();
+                                        FindLocation();
+                                        try {
+                                            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        String address = addresses.get(0).getAddressLine(0);
+                                        //String city = addresses.get(0).getLocality();
+                                        String state = addresses.get(0).getAdminArea();
 
                                         Map<String, Object> postMap = new HashMap<>();
                                         postMap.put("image_url", downloadUri);
                                         postMap.put("image_thumb", downloadthumbUri);
                                         postMap.put("post_category", type);
-                                        postMap.put("location", userlocation);
+                                        postMap.put("location", state);
                                         postMap.put("desc", desc);
+                                        postMap.put("address", address);
                                         postMap.put("user_id", current_user_id);
                                         postMap.put("timestamp", FieldValue.serverTimestamp());
 
@@ -290,6 +293,41 @@ public class NewPostActivity extends AppCompatActivity {
 
 
     }
+
+
+    public void FindLocation() {
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        Location location;
+
+        if (network_enabled) {
+
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            if (location != null) {
+                mLastLocation = location;
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                Toast.makeText(
+                        getApplicationContext(),
+                        String.valueOf(location.getLatitude()) + "\n" + String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
+
 
 
     @Override

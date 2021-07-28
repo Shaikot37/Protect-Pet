@@ -73,6 +73,9 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         String desc_data = blog_list.get(i).getDesc();
         viewHolder.setDescText(desc_data);
 
+        String address = blog_list.get(i).getAddress();
+        viewHolder.setAddress(address);
+
         String post_type = blog_list.get(i).getPost_category();
         viewHolder.setPost_category(post_type);
 
@@ -215,7 +218,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private View mview;
-        private TextView descView;
+        private TextView descView, addressView;
         private ImageView blog_image_view;
         private TextView blogDate;
         private TextView blogUserName;
@@ -291,6 +294,11 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
         public void setLocation(String location) {
 
+        }
+
+        public void setAddress(String address) {
+            addressView = mview.findViewById(R.id.address);
+            addressView.setText(address);
         }
     }
 

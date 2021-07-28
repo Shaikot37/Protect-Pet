@@ -1,9 +1,14 @@
 package com.example.protectpet;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,7 +43,10 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -51,6 +59,12 @@ public class SetupActivity extends AppCompatActivity {
     private ProgressBar setupProgress;
     private EditText bio;
 
+    private double latitude;
+    private double longitude;
+    private Location mLastLocation;
+    Geocoder geocoder;
+    List<Address> addresses;
+
     private FirebaseFirestore firebaseFirestore; //create particuler user account
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
@@ -59,9 +73,6 @@ public class SetupActivity extends AppCompatActivity {
     private Uri mainImageURI = null;
 
     private String user_id, loc; //all new user have unique id
-
-    String[] locations={"Dhaka","Khulna","Barishal"};
-    private Spinner userlocation;
 
     private boolean isChanged = false;
     @Override
@@ -78,34 +89,12 @@ public class SetupActivity extends AppCompatActivity {
         setupImage = findViewById(R.id.setup_image);
         setupName = findViewById(R.id.setup_name);
         setupBtn = findViewById(R.id.setup_btn);
-        userlocation = findViewById(R.id.spinner);
         bio = findViewById(R.id.setup_bio);
         setupProgress = findViewById(R.id.setup_progress);
 
-        setupProgress.setVisibility(View.INVISIBLE);
+        setupProgress.setVisibility(View.VISIBLE);
 
-
-        final ArrayAdapter data = new ArrayAdapter(this,android.R.layout.simple_spinner_item,locations);
-
-
-        data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        userlocation.setAdapter(data);
-
-        userlocation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-
-                loc = data.getItem(arg2).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-
-            }
-        });
-
+        geocoder = new Geocoder(this, Locale.getDefault());
 
         //retrived the data
         firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -184,6 +173,20 @@ public class SetupActivity extends AppCompatActivity {
 
                 }
 
+
+
+                FindLocation();
+                try {
+                    addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //String address = addresses.get(0).getAddressLine(0);
+                //String city = addresses.get(0).getLocality();
+                String state = addresses.get(0).getAdminArea();
+                String lat = String.valueOf(latitude);
+                String lon = String.valueOf(longitude);
+
                 reference = FirebaseDatabase.getInstance("https://cse499-3dd6a-default-rtdb.firebaseio.com/").getReference("Users").child(user_id);
 
                 Map<String, String> userMap = new HashMap<>();
@@ -191,9 +194,11 @@ public class SetupActivity extends AppCompatActivity {
                 userMap.put("username", user_name);
                 userMap.put("imageURL", download_uri.toString());
                 userMap.put("bio",biography);
-                userMap.put("location", loc);
+                userMap.put("location", state);
                 userMap.put("status", "offline");
                 userMap.put("search", user_name.toLowerCase());
+                userMap.put("latitude", lat);
+                userMap.put("longitude", lon);
 
                 reference.setValue(userMap);
 
@@ -255,6 +260,41 @@ public class SetupActivity extends AppCompatActivity {
         });
 
     }
+
+    public void FindLocation() {
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        Location location;
+
+        if (network_enabled) {
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            if (location != null) {
+                mLastLocation = location;
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                Toast.makeText(
+                        getApplicationContext(),
+                        String.valueOf(location.getLatitude()) + "\n" + String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
+
+
     //crop image
     private void BringImagePicker() {
 

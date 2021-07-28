@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Button gobutton;
     private Spinner loc_type;
     private String loc, s;
-    String[] locations={"Dhaka","Khulna","Barishal"};
+    String[] locations={"ঢাকা বিভাগ", "রাজশাহী বিভাগ" , "খুলনা বিভাগ" , "বরিশাল বিভাগ" , "সিলেট বিভাগ" , "রংপুর বিভাগ" , "ময়মনসিংহ বিভাগ" ,"চট্টগ্রাম বিভাগ"};
 
     public HomeFragment() {
         // Required empty public constructor

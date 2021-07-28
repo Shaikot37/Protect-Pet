@@ -50,11 +50,11 @@
     <EditText
         android:id="@+id/setup_bio"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/rounted_3"
         android:ems="10"
         android:hint="Your Bio"
@@ -68,35 +68,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/setup_name"
         app:layout_constraintVertical_bias="0.279" />
-
-
-    <LinearLayout
-        android:id="@+id/location"
-        android:orientation="horizontal"
-        android:padding="10dip"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/setup_bio"
-        tools:ignore="MissingConstraints">
-
-        <TextView
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="Your Location :"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/gray"
-            android:layout_marginBottom="5dp"/>
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            />
-
-    </LinearLayout>
 
 
     <Button
@@ -116,7 +87,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location" />
+        app:layout_constraintTop_toBottomOf="@+id/setup_bio" />
 
     <ProgressBar
         android:id="@+id/setup_progress"
@@ -125,8 +96,7 @@
         android:layout_height="wrap_content"
         android:theme="@style/RedAccent1"
         android:indeterminate="true"
-
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
