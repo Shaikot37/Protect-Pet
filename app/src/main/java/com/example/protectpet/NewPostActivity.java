@@ -149,13 +149,13 @@ public class NewPostActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                if(type == "Adopt"){
+                if(type.equals("Adopt")){
 
                 FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender("/topics/all","Adopt Pet!!",
                         "You should take a look at this post",getApplicationContext(),NewPostActivity.this);
                 fcmNotificationsSender.SendNotifications();}
 
-                else if(type == "Rescue"){
+                else if(type.equals("Rescue")){
 
                     FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender("/topics/all","Help!!!",
                             "Please rescue a pet!",getApplicationContext(),NewPostActivity.this);
@@ -241,6 +241,8 @@ public class NewPostActivity extends AppCompatActivity {
                                         postMap.put("location", state);
                                         postMap.put("desc", desc);
                                         postMap.put("address", address);
+                                        postMap.put("latitude", latitude);
+                                        postMap.put("longitude", longitude);
                                         postMap.put("user_id", current_user_id);
                                         postMap.put("timestamp", FieldValue.serverTimestamp());
 

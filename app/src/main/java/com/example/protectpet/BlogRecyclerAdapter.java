@@ -46,6 +46,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
     private FirebaseAuth firebaseAuth;
     private BottomSheetProfileDetailUser bottomSheetProfileDetailUser;
     public Context context1;
+    private Double latitude, longitude;
 
     public BlogRecyclerAdapter(List<BlogPost> blog_list, List<User> user_list) {
         this.user_list = user_list;
@@ -89,12 +90,14 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
 
         String blog_user_id = blog_list.get(i).getUser_id();
 
+        latitude = blog_list.get(i).getLatitude();
+        longitude = blog_list.get(i).getLongitude();
 
 
-            final String userName = user_list.get(i).getUsername();
-            final String userImage = user_list.get(i).getImageURL();
-            viewHolder.setUserData(userName, userImage);
-            final String bio = user_list.get(i).getBio();
+        final String userName = user_list.get(i).getUsername();
+        final String userImage = user_list.get(i).getImageURL();
+        viewHolder.setUserData(userName, userImage);
+        final String bio = user_list.get(i).getBio();
 
 
 
@@ -170,6 +173,17 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             }
         });
 
+        viewHolder.ad_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent locmap = new Intent(context1, AddressMap.class);
+                locmap.putExtra("latitude", latitude);
+                locmap.putExtra("longitude", longitude);
+                context1.startActivity(locmap);
+            }
+        });
+
+
 
         viewHolder.blog_image_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,7 +239,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         private CircleImageView blogUserImage;
         private ImageView blogLikebtn;
         private TextView blogLikecount;
-
+        private ImageView ad_map;
         private ImageView blogCommentBtn;
         private Button blogDelBtn;
 
@@ -235,7 +249,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
             blogLikebtn = mview.findViewById(R.id.blog_like_btn);
             blogCommentBtn = mview.findViewById(R.id.blog_comment_icon);
             blogDelBtn = mview.findViewById(R.id.blog_delete_btn);
-
+            ad_map = mview.findViewById(R.id.address_map);
             blog_image_view = mview.findViewById(R.id.blog_image);
 
         }

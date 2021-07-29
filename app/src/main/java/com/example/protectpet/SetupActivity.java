@@ -261,6 +261,7 @@ public class SetupActivity extends AppCompatActivity {
 
     }
 
+
     public void FindLocation() {
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
