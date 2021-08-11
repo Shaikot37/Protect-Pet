@@ -47,6 +47,6 @@ public class MyPlaces implements Serializable {
 
     @Override
     public String toString() {
-        return "ClassPojo [next_page_token = " + next_page_token + ", results = " + results + ", html_attributions = " + html_attributions + ", status = " + status + "]";
+        return "Class [next_page_token = " + next_page_token + ", results = " + results + ", html_attributions = " + html_attributions + ", status = " + status + "]";
     }
 }

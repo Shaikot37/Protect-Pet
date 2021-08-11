@@ -128,6 +128,6 @@ public class Results implements Serializable {
 
     @Override
     public String toString() {
-        return "ClassPojo [photos = " + photos + ", id = " + id + ", place_id = " + place_id + ", icon = " + icon + ", vicinity = " + vicinity + ", scope = " + scope + ", name = " + name + ", types = " + types + ", reference = " + reference + ", geometry = " + geometry + "]";
+        return "Class [photos = " + photos + ", id = " + id + ", place_id = " + place_id + ", icon = " + icon + ", vicinity = " + vicinity + ", scope = " + scope + ", name = " + name + ", types = " + types + ", reference = " + reference + ", geometry = " + geometry + "]";
     }
 }

@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -31,6 +33,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -48,10 +51,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Boolean isFirstPageFirstLoad = true;
 
     private TextView adopt, rescue;
-    private Button gobutton;
+    private ImageView gobutton;
     private Spinner loc_type;
     private String loc, s;
-    String[] locations={"ঢাকা বিভাগ", "রাজশাহী বিভাগ" , "খুলনা বিভাগ" , "বরিশাল বিভাগ" , "সিলেট বিভাগ" , "রংপুর বিভাগ" , "ময়মনসিংহ বিভাগ" ,"চট্টগ্রাম বিভাগ"};
+    String[] locations={"Search By Location","ঢাকা বিভাগ", "রাজশাহী বিভাগ" , "খুলনা বিভাগ" , "বরিশাল বিভাগ" , "সিলেট বিভাগ" , "রংপুর বিভাগ" , "ময়মনসিংহ বিভাগ" ,"চট্টগ্রাম বিভাগ"};
 
     public HomeFragment() {
         // Required empty public constructor
@@ -129,47 +132,50 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
              Query firstQuery = firebaseFirestore.collection("Posts").orderBy("timestamp", Query.Direction.DESCENDING).limit(5);
 
 
-            firstQuery.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+            firstQuery.addSnapshotListener(Objects.requireNonNull(getActivity()), new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                    if (!documentSnapshots.isEmpty()) {
-                        if (isFirstPageFirstLoad) {
-                            lastVisible = documentSnapshots.getDocuments().get(documentSnapshots.size() - 1);
-                            blogPosts.clear();
-                            user_list.clear();
-                        }
-                        for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
-                            if (doc.getType() == DocumentChange.Type.ADDED) {
+                    try {
+                        if (!documentSnapshots.isEmpty()) {
+                            if (isFirstPageFirstLoad) {
+                                lastVisible = documentSnapshots.getDocuments().get(documentSnapshots.size() - 1);
+                                blogPosts.clear();
+                                user_list.clear();
+                            }
+                            for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+                                if (doc.getType() == DocumentChange.Type.ADDED) {
 
 
-                                String blogPostId = doc.getDocument().getId();
-                                final BlogPost blogPost = doc.getDocument().toObject(BlogPost.class).withId(blogPostId);
-                                String blogUserId = doc.getDocument().getString("user_id");
-                                firebaseFirestore.collection("Users").document(blogUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            User user = task.getResult().toObject(User.class);
+                                    String blogPostId = doc.getDocument().getId();
+                                    final BlogPost blogPost = doc.getDocument().toObject(BlogPost.class).withId(blogPostId);
+                                    String blogUserId = doc.getDocument().getString("user_id");
+                                    firebaseFirestore.collection("Users").document(blogUserId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                User user = task.getResult().toObject(User.class);
 
-                                            if (isFirstPageFirstLoad) {
-                                                user_list.add(user);
-                                                blogPosts.add(blogPost);
+                                                if (isFirstPageFirstLoad) {
+                                                    user_list.add(user);
+                                                    blogPosts.add(blogPost);
 
-                                            } else {
-                                                user_list.add(0, user);
-                                                blogPosts.add(0, blogPost);
+                                                } else {
+                                                    user_list.add(0, user);
+                                                    blogPosts.add(0, blogPost);
+                                                }
+                                                blogRecyclerAdapter.notifyDataSetChanged();
                                             }
-                                            blogRecyclerAdapter.notifyDataSetChanged();
                                         }
-                                    }
-                                });
+                                    });
 
+
+                                }
 
                             }
 
+                            isFirstPageFirstLoad = false;
                         }
-
-                        isFirstPageFirstLoad = false;
+                    } catch (Exception x) {
                     }
                 }
             });
@@ -247,14 +253,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 Bundle bundle = new Bundle();
 
                 //Add your data to bundle
-                bundle.putString("location", loc);
+                if(loc=="Search By Location"){
+                    Toast.makeText(this.getContext(),"Select Location!", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    bundle.putString("location", loc);
 
-                //Add the bundle to the intent
-                page.putExtras(bundle);
+                    //Add the bundle to the intent
+                    page.putExtras(bundle);
 
-                //Fire that second activity
-                startActivity(page);
-                break;
+                    //Fire that second activity
+                    startActivity(page);
+                    break;
+                }
         }
     }
 }

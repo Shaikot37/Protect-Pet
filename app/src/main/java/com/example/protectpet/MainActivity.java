@@ -1,10 +1,15 @@
 package com.example.protectpet;
 
+import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.firebase.ui.auth.data.model.Resource;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private AccountFragment accountFragment;
     private FirebaseFirestore firebaseFirestore;
     private String current_user_id;
+    private int g = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,9 +116,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
+        //ImageView msg = findViewById(R.id.message);
+        //msg.setImageBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_baseline_notifications_active_24));
 
+        return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 

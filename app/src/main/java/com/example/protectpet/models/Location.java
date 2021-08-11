@@ -26,6 +26,6 @@ public class Location implements Serializable {
 
     @Override
     public String toString() {
-        return "ClassPojo [lng = " + lng + ", lat = " + lat + "]";
+        return "Location [lng = " + lng + ", lat = " + lat + "]";
     }
 }

@@ -95,7 +95,7 @@ public class NewPostActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
-        geocoder = new Geocoder(this, Locale.getDefault());
+        geocoder = new Geocoder(this, new Locale("bn_BD"));
 
         current_user_id = firebaseAuth.getCurrentUser().getUid();
         newPostImage = findViewById(R.id.new_post_image);
@@ -230,7 +230,8 @@ public class NewPostActivity extends AppCompatActivity {
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
-                                        String address = addresses.get(0).getAddressLine(0);
+                                        //String address = addresses.get(0).getAddressLine(0);
+                                        String address = addresses.get(0).getLocality() +", "+addresses.get(0).getSubAdminArea()+", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName();
                                         //String city = addresses.get(0).getLocality();
                                         String state = addresses.get(0).getAdminArea();
 
