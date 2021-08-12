@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.protectpet.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +48,7 @@ public class CommentsActivity extends AppCompatActivity {
     private CommentsRecyclerAdapter commentsRecyclerAdapter;
     private List<Comments> commentsList;
 
+    private List<User> userList;
     private ImageView imageView;
 
     private RecyclerView comment_list;
@@ -92,7 +94,8 @@ public class CommentsActivity extends AppCompatActivity {
         //RecyclerView firebase list
         //RecyclerView Firebase List
         commentsList = new ArrayList<>();
-        commentsRecyclerAdapter = new CommentsRecyclerAdapter(commentsList,commentId);
+        userList = new ArrayList<>();
+        commentsRecyclerAdapter = new CommentsRecyclerAdapter(commentsList,commentId,userList);
         comment_list.setHasFixedSize(true);
         comment_list.setLayoutManager(new LinearLayoutManager(this));
         comment_list.setAdapter(commentsRecyclerAdapter);

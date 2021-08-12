@@ -64,6 +64,22 @@
                 android:layout_marginBottom="5dp">
 
             </TextView>
+
+            <TextView
+                android:id="@+id/message"
+                android:layout_below="@id/tv_profile__bottom_sheet_fragment_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Message"
+                android:textColor="@color/primary_txt"
+                android:padding="3dp"
+                android:textSize="17sp"
+                android:background="@drawable/border_card3"
+                android:layout_marginLeft="240dp"
+                android:layout_marginBottom="5dp">
+
+            </TextView>
+
             <TextView
                 android:id="@+id/tv_profile_bottom_sheet_fragment_bio"
                 android:layout_width="match_parent"
@@ -72,6 +88,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="25dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/background_bio"
                 android:gravity="top"
                 android:maxLength="100"

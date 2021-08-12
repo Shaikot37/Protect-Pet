@@ -88,7 +88,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         viewHolder.setBlogImage(image_url, thumbUri);
 
 
-        String blog_user_id = blog_list.get(i).getUser_id();
+        final String blog_user_id = blog_list.get(i).getUser_id();
 
         latitude = blog_list.get(i).getLatitude();
         longitude = blog_list.get(i).getLongitude();
@@ -207,7 +207,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         viewHolder.blogUserImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetProfileDetailUser = new BottomSheetProfileDetailUser(userName, userImage, bio, context1);
+                bottomSheetProfileDetailUser = new BottomSheetProfileDetailUser(userName, userImage, bio, context1, blog_user_id);
                 FragmentManager manager = ((AppCompatActivity) context1).getSupportFragmentManager();
                 bottomSheetProfileDetailUser.show(manager, "edit");
             }
@@ -216,7 +216,7 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         viewHolder.blogUserName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetProfileDetailUser = new BottomSheetProfileDetailUser(userName, userImage, bio, context1);
+                bottomSheetProfileDetailUser = new BottomSheetProfileDetailUser(userName, userImage, bio, context1, blog_user_id);
                 FragmentManager manager = ((AppCompatActivity) context1).getSupportFragmentManager();
                 bottomSheetProfileDetailUser.show(manager, "edit");
             }

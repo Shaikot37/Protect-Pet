@@ -61,6 +61,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         final String imageUrl = user.getImageURL();
         final String userName = user.getUsername();
         final String bio = user.getBio();
+        final String userid = user.getId();
 
         holder.username.setText(user.getUsername());
 
@@ -69,7 +70,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         holder.profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetProfileDetailUser = new BottomSheetProfileDetailUser(userName, imageUrl, bio, mContext);
+                bottomSheetProfileDetailUser = new BottomSheetProfileDetailUser(userName, imageUrl, bio, mContext, userid);
                 FragmentManager manager = ((AppCompatActivity) mContext).getSupportFragmentManager();
                 bottomSheetProfileDetailUser.show(manager, "edit");
             }

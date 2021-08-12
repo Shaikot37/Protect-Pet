@@ -227,9 +227,7 @@ public class NewPostActivity extends AppCompatActivity {
                                         FindLocation();
                                         try {
                                             addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
+
                                         //String address = addresses.get(0).getAddressLine(0);
                                         String address = addresses.get(0).getLocality() +", "+addresses.get(0).getSubAdminArea()+", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName();
                                         //String city = addresses.get(0).getLocality();
@@ -246,6 +244,7 @@ public class NewPostActivity extends AppCompatActivity {
                                         postMap.put("longitude", longitude);
                                         postMap.put("user_id", current_user_id);
                                         postMap.put("timestamp", FieldValue.serverTimestamp());
+
 
                                         firebaseFirestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                             @Override
@@ -267,6 +266,9 @@ public class NewPostActivity extends AppCompatActivity {
 
                                             }
                                         });
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
 
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
@@ -302,10 +304,10 @@ public class NewPostActivity extends AppCompatActivity {
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
+        boolean gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         Location location;
 
-        if (network_enabled) {
+        if (network_enabled && gps_enabled) {
 
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling

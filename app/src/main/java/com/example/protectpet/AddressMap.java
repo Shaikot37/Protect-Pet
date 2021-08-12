@@ -77,6 +77,7 @@ public class AddressMap extends FragmentActivity implements OnMapReadyCallback {
             mMarker.remove();
         }
 
+    try {
         latitude = location.getLatitude();
         longitude = location.getLongitude();
         LatLng latLng = new LatLng(latitude, longitude);
@@ -89,6 +90,10 @@ public class AddressMap extends FragmentActivity implements OnMapReadyCallback {
         // move camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+    }
+    catch (Exception z){
+        Toast.makeText(this, "Turn on your location please!", Toast.LENGTH_SHORT).show();
+    }
 
 
     }

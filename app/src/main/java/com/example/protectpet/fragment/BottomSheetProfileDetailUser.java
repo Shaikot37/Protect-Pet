@@ -1,6 +1,7 @@
 package com.example.protectpet.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.example.protectpet.ChatActivity;
 import com.example.protectpet.R;
+import com.example.protectpet.ShowPlacesOnMapActivity;
+import com.example.protectpet.constants.PlacesConstant;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Objects;
@@ -24,16 +28,19 @@ public class BottomSheetProfileDetailUser extends BottomSheetDialogFragment {
     String imageURL;
     String bio;
     Context context;
+    String user_id;
 
-    CircleImageView iv_profile_bottom_sheet_profile_image;
-    TextView tv_profile__bottom_sheet_fragment_username;
-    TextView tv_profile_bottom_sheet_fragment_bio;
+    CircleImageView profile_image;
+    TextView p_username;
+    TextView p_bio;
+    TextView msg;
 
-    public BottomSheetProfileDetailUser(String username, String imageURL, String bio, Context context) {
+    public BottomSheetProfileDetailUser(String username, String imageURL, String bio, Context context, String user_id) {
         this.username = username;
         this.imageURL = imageURL;
         this.bio = bio;
         this.context = context;
+        this.user_id = user_id;
     }
 
 
@@ -55,21 +62,32 @@ public class BottomSheetProfileDetailUser extends BottomSheetDialogFragment {
     }
 
     private void setDetails(String username, String imageURL, String bio) {
-        tv_profile__bottom_sheet_fragment_username.setText(username);
-        tv_profile_bottom_sheet_fragment_bio.setText(bio);
-
-        if (imageURL.equals("default")) {
-            iv_profile_bottom_sheet_profile_image.setImageResource(R.drawable.user);
-        } else {
-            Glide.with(context).load(imageURL).into(iv_profile_bottom_sheet_profile_image);
-        }
-
+        p_username.setText(username);
+        p_bio.setText(bio);
+try {
+    if (imageURL.equals("default")) {
+        profile_image.setImageResource(R.drawable.user);
+    } else {
+        Glide.with(context).load(imageURL).into(profile_image);
+    }
+}
+catch (Exception g){}
     }
 
     private void init(View view) {
-        iv_profile_bottom_sheet_profile_image = view.findViewById(R.id.iv_profile_bottom_sheet);
-        tv_profile__bottom_sheet_fragment_username = view.findViewById(R.id.tv_profile__bottom_sheet_fragment_username);
-        tv_profile_bottom_sheet_fragment_bio = view.findViewById(R.id.tv_profile_bottom_sheet_fragment_bio);
+        profile_image = view.findViewById(R.id.iv_profile_bottom_sheet);
+        p_username = view.findViewById(R.id.tv_profile__bottom_sheet_fragment_username);
+        p_bio = view.findViewById(R.id.tv_profile_bottom_sheet_fragment_bio);
+        msg = view.findViewById(R.id.message);
+
+        msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ChatActivity.class);
+                intent.putExtra("userid",user_id);
+                startActivity(intent);
+            }
+        });
     }
 
 }

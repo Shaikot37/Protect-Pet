@@ -127,9 +127,12 @@ public class RescuePage extends AppCompatActivity {
 
                 Intent settingsIntent = new Intent(RescuePage.this, SetupActivity.class);
                 startActivity(settingsIntent);
-
                 return true;
 
+            case R.id.message:
+                Intent msg = new Intent(RescuePage.this, MessageActivity.class);
+                startActivity(msg);
+                return true;
 
             default:
                 return false;
