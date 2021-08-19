@@ -131,6 +131,11 @@ public class Vaccine extends AppCompatActivity {
                 return true;
 
 
+            case R.id.message:
+                Intent msg = new Intent(Vaccine.this, MessageActivity.class);
+                startActivity(msg);
+                return true;
+
             default:
                 return false;
 

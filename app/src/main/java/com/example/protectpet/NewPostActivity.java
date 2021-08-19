@@ -55,36 +55,36 @@ import java.util.UUID;
 import id.zelory.compressor.Compressor;
 
 public class NewPostActivity extends AppCompatActivity {
-    private Toolbar newPostToolbar;
-    private ImageView newPostImage;
-    private EditText newPostDesc;
-    private Button newPostBtn;
-    private Spinner newPostType,newLocation;
 
-    private Uri postImageUri = null;
+        private Toolbar newPostToolbar;
+        private ImageView newPostImage;
+        private EditText newPostDesc;
+        private Button newPostBtn;
+        private Spinner newPostType, newLocation;
 
-    private ProgressBar newPostProgress;
+        private Uri postImageUri = null;
 
-    private StorageReference storageReference;
-    private FirebaseFirestore firebaseFirestore;
-    private FirebaseAuth firebaseAuth;
-    private Bitmap compressedImageFile;
+        private ProgressBar newPostProgress;
 
-    private String current_user_id;
-    private String type, userlocation;
+        private StorageReference storageReference;
+        private FirebaseFirestore firebaseFirestore;
+        private FirebaseAuth firebaseAuth;
+        private Bitmap compressedImageFile;
 
-    private double latitude;
-    private double longitude;
-    private Location mLastLocation;
-    Geocoder geocoder;
-    List<Address> addresses;
+        private String current_user_id;
+        private String type, userlocation;
 
-    String[] post_type={"Random","Adopt","Rescue"};
+        private double latitude;
+        private double longitude;
+        private Location mLastLocation;
+        Geocoder geocoder;
+        List<Address> addresses;
+
+        String[] post_type = {"Random", "Adopt", "Rescue"};
 
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+        @Override
+        protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_post);
         newPostToolbar = findViewById(R.id.new_post_toolbar);
@@ -105,8 +105,7 @@ public class NewPostActivity extends AppCompatActivity {
         newPostProgress = findViewById(R.id.new_post_progress);
 
 
-
-        final ArrayAdapter data = new ArrayAdapter(this,android.R.layout.simple_spinner_item,post_type);
+        final ArrayAdapter data = new ArrayAdapter(this, android.R.layout.simple_spinner_item, post_type);
 
         data.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         newPostType.setAdapter(data);
@@ -127,7 +126,6 @@ public class NewPostActivity extends AppCompatActivity {
         });
 
 
-
         newPostImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,9 +137,7 @@ public class NewPostActivity extends AppCompatActivity {
         });
 
 
-
         FirebaseMessaging.getInstance().subscribeToTopic("all");
-
 
 
         newPostBtn.setOnClickListener(new View.OnClickListener() {
@@ -149,22 +145,22 @@ public class NewPostActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                if(type.equals("Adopt")){
+                if (type.equals("Adopt")) {
 
-                FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender("/topics/all","Adopt Pet!!",
-                        "You should take a look at this post",getApplicationContext(),NewPostActivity.this);
-                fcmNotificationsSender.SendNotifications();}
+                    FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender("/topics/all", "Adopt Pet!!",
+                            "You should take a look at this post", getApplicationContext(), NewPostActivity.this);
+                    fcmNotificationsSender.SendNotifications();
+                } else if (type.equals("Rescue")) {
 
-                else if(type.equals("Rescue")){
-
-                    FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender("/topics/all","Help!!!",
-                            "Please rescue a pet!",getApplicationContext(),NewPostActivity.this);
-                    fcmNotificationsSender.SendNotifications();}
+                    FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender("/topics/all", "Help!!!",
+                            "Please rescue a pet!", getApplicationContext(), NewPostActivity.this);
+                    fcmNotificationsSender.SendNotifications();
+                }
 
 
                 final String desc = newPostDesc.getText().toString();
 
-                if(!TextUtils.isEmpty(desc) && postImageUri != null){
+                if (!TextUtils.isEmpty(desc) && postImageUri != null) {
 
                     newPostProgress.setVisibility(View.VISIBLE);
 
@@ -197,7 +193,7 @@ public class NewPostActivity extends AppCompatActivity {
 
                             final String downloadUri = Objects.requireNonNull(task.getResult().getDownloadUrl()).toString();
 
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
 
                                 File newThumbFile = new File(postImageUri.getPath());
                                 try {
@@ -223,49 +219,50 @@ public class NewPostActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                                        String downloadthumbUri = taskSnapshot.getDownloadUrl().toString();
-                                        FindLocation();
                                         try {
+                                            String downloadthumbUri = taskSnapshot.getDownloadUrl().toString();
+                                            FindLocation();
+
                                             addresses = geocoder.getFromLocation(latitude, longitude, 1);
 
-                                        //String address = addresses.get(0).getAddressLine(0);
-                                        String address = addresses.get(0).getLocality() +", "+addresses.get(0).getSubAdminArea()+", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName();
-                                        //String city = addresses.get(0).getLocality();
-                                        String state = addresses.get(0).getAdminArea();
+                                            //String address = addresses.get(0).getAddressLine(0);
+                                            String address = addresses.get(0).getLocality() + ", " + addresses.get(0).getSubAdminArea() + ", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName();
+                                            //String city = addresses.get(0).getLocality();
+                                            String state = addresses.get(0).getAdminArea();
 
-                                        Map<String, Object> postMap = new HashMap<>();
-                                        postMap.put("image_url", downloadUri);
-                                        postMap.put("image_thumb", downloadthumbUri);
-                                        postMap.put("post_category", type);
-                                        postMap.put("location", state);
-                                        postMap.put("desc", desc);
-                                        postMap.put("address", address);
-                                        postMap.put("latitude", latitude);
-                                        postMap.put("longitude", longitude);
-                                        postMap.put("user_id", current_user_id);
-                                        postMap.put("timestamp", FieldValue.serverTimestamp());
+                                            Map<String, Object> postMap = new HashMap<>();
+                                            postMap.put("image_url", downloadUri);
+                                            postMap.put("image_thumb", downloadthumbUri);
+                                            postMap.put("post_category", type);
+                                            postMap.put("location", state);
+                                            postMap.put("desc", desc);
+                                            postMap.put("address", address);
+                                            postMap.put("latitude", latitude);
+                                            postMap.put("longitude", longitude);
+                                            postMap.put("user_id", current_user_id);
+                                            postMap.put("timestamp", FieldValue.serverTimestamp());
 
 
-                                        firebaseFirestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                            firebaseFirestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DocumentReference> task) {
 
-                                                if(task.isSuccessful()){
+                                                    if (task.isSuccessful()) {
 
-                                                    Toast.makeText(NewPostActivity.this, "Post was added", Toast.LENGTH_LONG).show();
-                                                    Intent mainIntent = new Intent(NewPostActivity.this, MainActivity.class);
-                                                    startActivity(mainIntent);
-                                                    finish();
+                                                        Toast.makeText(NewPostActivity.this, "Post was added", Toast.LENGTH_LONG).show();
+                                                        Intent mainIntent = new Intent(NewPostActivity.this, MainActivity.class);
+                                                        startActivity(mainIntent);
+                                                        finish();
 
-                                                } else {
-                                                    Toast.makeText(NewPostActivity.this, "Sorry! we can not add this post", Toast.LENGTH_LONG).show();
+                                                    } else {
+                                                        Toast.makeText(NewPostActivity.this, "Sorry! we can not add this post", Toast.LENGTH_LONG).show();
+
+                                                    }
+
+                                                    newPostProgress.setVisibility(View.INVISIBLE);
 
                                                 }
-
-                                                newPostProgress.setVisibility(View.INVISIBLE);
-
-                                            }
-                                        });
+                                            });
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
@@ -300,7 +297,7 @@ public class NewPostActivity extends AppCompatActivity {
     }
 
 
-    public void FindLocation() {
+        public void FindLocation () {
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -334,26 +331,25 @@ public class NewPostActivity extends AppCompatActivity {
     }
 
 
+        @Override
+        protected void onActivityResult ( int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
 
-    @Override
-        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
 
-            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                if (resultCode == RESULT_OK) {
+                postImageUri = result.getUri();
+                newPostImage.setImageURI(postImageUri);
 
-                    postImageUri = result.getUri();
-                    newPostImage.setImageURI(postImageUri);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
-                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
 
-                    Exception error = result.getError();
-
-                }
             }
-
         }
 
-
     }
+
+}
+

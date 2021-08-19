@@ -83,7 +83,6 @@ public class NearbyPlaces extends AppCompatActivity {
         String[] PERMISSIONS = {
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.CALL_PHONE,
                 Manifest.permission.ACCESS_WIFI_STATE,
                 Manifest.permission.ACCESS_NETWORK_STATE,
         };
@@ -128,6 +127,10 @@ public class NearbyPlaces extends AppCompatActivity {
 
                 return true;
 
+            case R.id.message:
+                Intent msg = new Intent(NearbyPlaces.this, MessageActivity.class);
+                startActivity(msg);
+                return true;
 
             default:
                 return false;
