@@ -1,6 +1,7 @@
 package com.example.protectpet;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,15 +32,7 @@ public class PetCareFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PetCareFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+     // TODO: Rename and change types and number of parameters
     public static PetCareFragment newInstance(String param1, String param2) {
         PetCareFragment fragment = new PetCareFragment();
         Bundle args = new Bundle();
@@ -62,10 +55,11 @@ public class PetCareFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_about_us, container, false);
+        View view = inflater.inflate(R.layout.fragment_petcare, container, false);
         context = container.getContext();
         petcare = (TextView)view.findViewById(R.id.description);
-        petcare.setText(R.string.petcare);
+        //petcare.setText(R.string.petcare);
+        //petcare.setTypeface(null, Typeface.BOLD);
         return view;
     }
 }

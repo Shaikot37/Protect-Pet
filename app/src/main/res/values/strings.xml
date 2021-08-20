@@ -55,9 +55,37 @@
 
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="aboutus">We make this app</string>
+    <string name="aboutus"> We have tried to Build a community where people value animals and treat them well with respect and proper care.
+        We tried to Gather volunteers to help the helpless, needy, abandoned animals and Providing information on medical resources for animals.
+        It is a social-communicative site where pet owners, helpers, experts, rescuers can communicate and help each other effortlessly.
+        This app will help tracking details on birth, food habit, growth and medical history of a pet.
+        And also useful for Reducing pet overpopulation and suffering.</string>
+
     <string name="vaccine">This is vaccine instruction</string>
-    <string name="petcare">Here we will write how to take pet care</string>
+    <string name="petcare">Having a pet sounds interesting and fun. But, adopting a pet and taking care of them is a big
+        responsibility. Here are some of the tips which will help you to take good care of your pet and keep them happy,
+        active and healthy:</string>
+
+    <string name="dog">Provide a protected and clean living environment for your dog. Always keep fresh water available.
+        Feed a quality diet and prevent obesity. Have your pet examined by a veterinarian on a regular basis. Provide ample opportunities to exercise.
+        Communicate with your dog and develop a relationship. Train your dog to follow the simple commands. Practice reproductive control.
+        Don’t overlook grooming and nail trimming and dental care is very important.</string>
+    <string name="bird">As long as you know how to look after a bird properly, your home can be a wonderful place for your pet to live, flourish and fly!
+        Make sure your pet bird has access to bird baths or showers. They love water and it’s great for keeping them healthy and happy.
+        Give them access to full sunlight and 10-12 hours of darkness every night. This can be made easier to achieve with a blackout cover.
+        Let them get some exercise. Use toys to keep them active in their cage and supervise out-of-cage play at least once a week. Make sure you choose
+        a safe location for them to spread their wings and keep them on a harness if necessary.</string>
+    <string name="cat">Provide plenty of human companionship.
+        Provide regular, suitable meals with a constant supply of fresh water.
+        Provide a clean and comfortable bed.
+        Provide the cat with outdoor access or be prepared to empty and clean a litter tray on a daily basis.
+        Provide it with a stimulating and safe environment.
+        Groom it regularly. Longhaired cats require daily grooming.
+        Have it neutered between 4 and 6 months old.
+        Vaccinate against the major feline diseases regularly.
+        Worm regularly and provide treatment for fleas.
+        Take the cat to the vet when it shows any sign of illness.
+        Insure your cat or make sure you can afford the cost of any veterinary treatment it may need.</string>
 
     <string name="title_activity_address_map">Map</string>
 
