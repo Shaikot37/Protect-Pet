@@ -61,7 +61,11 @@
         This app will help tracking details on birth, food habit, growth and medical history of a pet.
         And also useful for Reducing pet overpopulation and suffering.</string>
 
-    <string name="vaccine">This is vaccine instruction</string>
+    <string name="vaccine">The first thing to know is that there is not just one puppy vaccination schedule for all dogs. Factors such as which
+        part of the country you live in, and your dog’s individual risk factors will come into play. Some dogs do not need every vaccine. This decision
+        is between you and your veterinarian. Always discuss puppy vaccinations at your regularly scheduled appointments.
+        That said, here is a generally accepted guideline of the puppy vaccination schedule for the first year.</string>
+
     <string name="petcare">Having a pet sounds interesting and fun. But, adopting a pet and taking care of them is a big
         responsibility. Here are some of the tips which will help you to take good care of your pet and keep them happy,
         active and healthy:</string>
@@ -70,11 +74,13 @@
         Feed a quality diet and prevent obesity. Have your pet examined by a veterinarian on a regular basis. Provide ample opportunities to exercise.
         Communicate with your dog and develop a relationship. Train your dog to follow the simple commands. Practice reproductive control.
         Don’t overlook grooming and nail trimming and dental care is very important.</string>
+
     <string name="bird">As long as you know how to look after a bird properly, your home can be a wonderful place for your pet to live, flourish and fly!
         Make sure your pet bird has access to bird baths or showers. They love water and it’s great for keeping them healthy and happy.
         Give them access to full sunlight and 10-12 hours of darkness every night. This can be made easier to achieve with a blackout cover.
         Let them get some exercise. Use toys to keep them active in their cage and supervise out-of-cage play at least once a week. Make sure you choose
         a safe location for them to spread their wings and keep them on a harness if necessary.</string>
+
     <string name="cat">Provide plenty of human companionship.
         Provide regular, suitable meals with a constant supply of fresh water.
         Provide a clean and comfortable bed.
@@ -87,6 +93,13 @@
         Take the cat to the vet when it shows any sign of illness.
         Insure your cat or make sure you can afford the cost of any veterinary treatment it may need.</string>
 
+    <string name="dogvaccine">There is a difference of opinion about having your adult dog vaccinated every year. Some vets believe too many vaccinations in adult dogs pose
+        health risks. But others disagree, saying that yearly vaccinations will prevent dangerous diseases such as distemper. Talk with your vet to determine what kind of
+        vaccination protocol works for you and your dog.<br></br>
+        Many dog owners opt for titer tests before they administer annual vaccinations. Titer tests measure a dog’s immunity levels, and this can determine which, if any,
+        vaccinations are necessary. One key exception to this is rabies: a titer test is not an option when it comes to the rabies vaccine. This vaccination is required by law
+        across the United States. Your vet can tell you the schedule for your particular state. And it’s all worth it. For your effort and care your puppy will lavish you with
+        lifelong love in return. This critical first year of her life is a fun and exciting time for both of you. As she grows physically, the wonderful bond between you will grow, too.</string>
     <string name="title_activity_address_map">Map</string>
 
 </resources>

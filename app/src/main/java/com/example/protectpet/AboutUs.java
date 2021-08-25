@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,6 +37,7 @@ public class AboutUs extends AppCompatActivity {
     private AboutUsFragment aboutUsFragment;
     private FirebaseFirestore firebaseFirestore;
     private String current_user_id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

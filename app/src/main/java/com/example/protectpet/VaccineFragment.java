@@ -31,14 +31,7 @@ public class VaccineFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment VaccineFragment.
-     */
+
     // TODO: Rename and change types and number of parameters
     public static VaccineFragment newInstance(String param1, String param2) {
         VaccineFragment fragment = new VaccineFragment();
@@ -62,10 +55,10 @@ public class VaccineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_about_us, container, false);
+        View view = inflater.inflate(R.layout.fragment_vaccine, container, false);
         context = container.getContext();
-        vaccine = (TextView)view.findViewById(R.id.description);
-        vaccine.setText(R.string.vaccine);
+        //vaccine = (TextView)view.findViewById(R.id.description);
+        //vaccine.setText(R.string.vaccine);
         return view;
     }
 }

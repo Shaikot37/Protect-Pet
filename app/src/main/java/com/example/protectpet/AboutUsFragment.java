@@ -1,10 +1,13 @@
 package com.example.protectpet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -19,6 +22,11 @@ public class AboutUsFragment extends Fragment {
     private String mParam2;
     private Context context;
     private TextView aboutus;
+
+    private String mailTo;
+    private String mailSubject;
+    private EditText mailContent;
+    private Button subbtn;
 
     public AboutUsFragment() {
         // Required empty public constructor
@@ -37,6 +45,7 @@ public class AboutUsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -50,6 +59,23 @@ public class AboutUsFragment extends Fragment {
         context = container.getContext();
         aboutus = (TextView)view.findViewById(R.id.description);
         aboutus.setText(R.string.aboutus);
+
+
+        mailTo = "shaikot911@gmail.com";
+        mailSubject = "Protect Pet";
+        mailContent = (EditText)view.findViewById(R.id.txt);
+        subbtn = (Button)view.findViewById(R.id.btn);
+        subbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(Intent.ACTION_SEND);
+                it.putExtra(Intent.EXTRA_EMAIL, new String[]{mailTo});
+                it.putExtra(Intent.EXTRA_SUBJECT, mailSubject);
+                it.putExtra(Intent.EXTRA_TEXT, mailContent.getText());
+                it.setType("message/rfc822");
+                startActivity(Intent.createChooser(it, "Choose Mail App"));
+            }
+        });
 
         return view;
     }

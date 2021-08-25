@@ -83,10 +83,13 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="message/rfc822" />
             </intent-filter>
         </activity>
+
         <activity android:name=".loginActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".SetupActivity" />

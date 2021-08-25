@@ -87,8 +87,12 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
         final String thumbUri = blog_list.get(i).getImage_thumb();
         viewHolder.setBlogImage(image_url, thumbUri);
 
-
         final String blog_user_id = blog_list.get(i).getUser_id();
+        if (blog_user_id.equals(currentUserId)) {
+            viewHolder.blogDelBtn.setEnabled(true);
+            viewHolder.blogDelBtn.setVisibility(View.VISIBLE);
+        }
+
 
         latitude = blog_list.get(i).getLatitude();
         longitude = blog_list.get(i).getLongitude();
@@ -219,6 +223,21 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<BlogRecyclerAdapte
                 bottomSheetProfileDetailUser = new BottomSheetProfileDetailUser(userName, userImage, bio, context1, blog_user_id);
                 FragmentManager manager = ((AppCompatActivity) context1).getSupportFragmentManager();
                 bottomSheetProfileDetailUser.show(manager, "edit");
+            }
+        });
+
+        viewHolder.blogDelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseFirestore.collection("Posts").document(blogPostId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        blog_list.remove(i);
+                        user_list.remove(i);
+
+                    }
+                });
             }
         });
 

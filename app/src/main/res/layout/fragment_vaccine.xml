@@ -1,15 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".VaccineFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
     <TextView
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="" />
+        android:padding="7dp"
+        android:textStyle="bold"
+        android:text="Puppy Vaccination Schedule:"
+        android:textColor="@color/bluebarry"
+        android:textSize="20dp"/>
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/dog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_weight="0"
+            android:textColor="@color/primary_txt"
+            android:textStyle="bold"
+            android:text="@string/vaccine" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:padding="5dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:src="@drawable/puppyvaccine" />
+
+        <TextView
+            android:id="@+id/adult"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:text="Vaccinations for Adult Dogs: Boosters and Titers"
+            android:textColor="@color/bluebarry"
+            android:textSize="15dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/adltdog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_weight="0"
+            android:textColor="@color/primary_txt"
+            android:textStyle="bold"
+            android:text="@string/dogvaccine" />
+
+        <TextView
+            android:id="@+id/cat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="7dp"
+            android:textStyle="bold"
+            android:text="Vaccination Schedule for Cats: Core and Non-core Vaccines"
+            android:textColor="@color/bluebarry"
+            android:textSize="20dp"/>
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/border_card3"
+            android:src="@drawable/catsvaccine" />
+
+        <TextView
+            android:id="@+id/bird"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:textStyle="bold"
+            android:text="Vaccination program for birds at different ages:"
+            android:textColor="@color/bluebarry"
+            android:textSize="20dp"/>
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/border_card"
+            android:src="@drawable/birdsvaccine" />
+
+    </LinearLayout>
+
+
+</ScrollView>
