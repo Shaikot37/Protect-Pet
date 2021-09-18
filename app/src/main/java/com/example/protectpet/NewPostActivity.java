@@ -2,6 +2,7 @@ package com.example.protectpet;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,7 +11,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,9 +26,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -63,6 +68,7 @@ public class NewPostActivity extends AppCompatActivity {
         private Spinner newPostType, newLocation;
 
         private Uri postImageUri = null;
+        private static final int LOCATION_CODE = 1000;
 
         private ProgressBar newPostProgress;
 
@@ -140,164 +146,199 @@ public class NewPostActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic("all");
 
 
-        newPostBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
 
-                if (type.equals("Adopt")) {
+            newPostBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!isLocationEnabled(NewPostActivity.this)) {
+                        Toast.makeText(NewPostActivity.this, "Turn on your location please!", Toast.LENGTH_LONG).show();
 
-                    FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender("/topics/all", "Adopt Pet!!",
-                            "You should take a look at this post", getApplicationContext(), NewPostActivity.this);
-                    fcmNotificationsSender.SendNotifications();
-                } else if (type.equals("Rescue")) {
+                        Intent mainIntent = new Intent(NewPostActivity.this, MainActivity.class);
+                        startActivity(mainIntent);
+                        finish();
+                    }
+                    else{
 
-                    FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender("/topics/all", "Help!!!",
-                            "Please rescue a pet!", getApplicationContext(), NewPostActivity.this);
-                    fcmNotificationsSender.SendNotifications();
-                }
+                    if (type.equals("Adopt")) {
 
+                        FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender("/topics/all", "Adopt Pet!!",
+                                "You should take a look at this post", getApplicationContext(), NewPostActivity.this);
+                        fcmNotificationsSender.SendNotifications();
+                    } else if (type.equals("Rescue")) {
 
-                final String desc = newPostDesc.getText().toString();
-
-                if (!TextUtils.isEmpty(desc) && postImageUri != null) {
-
-                    newPostProgress.setVisibility(View.VISIBLE);
-
-                    final String randomName = UUID.randomUUID().toString();
-
-                    // PHOTO UPLOAD
-                    File newImageFile = new File(postImageUri.getPath());
-                    try {
-
-                        compressedImageFile = new Compressor(NewPostActivity.this)
-                                .setMaxHeight(720)
-                                .setMaxWidth(720)
-                                .setQuality(50)
-                                .compressToBitmap(newImageFile);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        FcmNotificationsSender fcmNotificationsSender = new FcmNotificationsSender("/topics/all", "Help!!!",
+                                "Please rescue a pet!", getApplicationContext(), NewPostActivity.this);
+                        fcmNotificationsSender.SendNotifications();
                     }
 
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                    byte[] imageData = baos.toByteArray();
 
-                    // PHOTO UPLOAD
+                    final String desc = newPostDesc.getText().toString();
 
-                    UploadTask filePath = storageReference.child("post_images").child(randomName + ".jpg").putBytes(imageData);
-                    filePath.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull final Task<UploadTask.TaskSnapshot> task) {
+                    if (!TextUtils.isEmpty(desc) && postImageUri != null) {
 
-                            final String downloadUri = Objects.requireNonNull(task.getResult().getDownloadUrl()).toString();
+                        newPostProgress.setVisibility(View.VISIBLE);
 
-                            if (task.isSuccessful()) {
+                        final String randomName = UUID.randomUUID().toString();
 
-                                File newThumbFile = new File(postImageUri.getPath());
-                                try {
+                        // PHOTO UPLOAD
+                        File newImageFile = new File(postImageUri.getPath());
+                        try {
 
-                                    compressedImageFile = new Compressor(NewPostActivity.this)
-                                            .setMaxHeight(100)
-                                            .setMaxWidth(100)
-                                            .setQuality(1)
-                                            .compressToBitmap(newThumbFile);
+                            compressedImageFile = new Compressor(NewPostActivity.this)
+                                    .setMaxHeight(720)
+                                    .setMaxWidth(720)
+                                    .setQuality(50)
+                                    .compressToBitmap(newImageFile);
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                                byte[] thumbData = baos.toByteArray();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        byte[] imageData = baos.toByteArray();
 
-                                UploadTask uploadTask = storageReference.child("post_images/thumbs")
-                                        .child(randomName + ".jpg").putBytes(thumbData);
+                        // PHOTO UPLOAD
 
-                                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        UploadTask filePath = storageReference.child("post_images").child(randomName + ".jpg").putBytes(imageData);
+                        filePath.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull final Task<UploadTask.TaskSnapshot> task) {
 
-                                        try {
-                                            String downloadthumbUri = taskSnapshot.getDownloadUrl().toString();
-                                            FindLocation();
+                                final String downloadUri = Objects.requireNonNull(task.getResult().getDownloadUrl()).toString();
 
-                                            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                                if (task.isSuccessful()) {
 
-                                            //String address = addresses.get(0).getAddressLine(0);
-                                            String address = addresses.get(0).getLocality() + ", " + addresses.get(0).getSubAdminArea() + ", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName();
-                                            //String city = addresses.get(0).getLocality();
-                                            String state = addresses.get(0).getAdminArea();
+                                    File newThumbFile = new File(postImageUri.getPath());
+                                    try {
 
-                                            Map<String, Object> postMap = new HashMap<>();
-                                            postMap.put("image_url", downloadUri);
-                                            postMap.put("image_thumb", downloadthumbUri);
-                                            postMap.put("post_category", type);
-                                            postMap.put("location", state);
-                                            postMap.put("desc", desc);
-                                            postMap.put("address", address);
-                                            postMap.put("latitude", latitude);
-                                            postMap.put("longitude", longitude);
-                                            postMap.put("user_id", current_user_id);
-                                            postMap.put("timestamp", FieldValue.serverTimestamp());
+                                        compressedImageFile = new Compressor(NewPostActivity.this)
+                                                .setMaxHeight(100)
+                                                .setMaxWidth(100)
+                                                .setQuality(1)
+                                                .compressToBitmap(newThumbFile);
+
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                                    byte[] thumbData = baos.toByteArray();
+
+                                    UploadTask uploadTask = storageReference.child("post_images/thumbs")
+                                            .child(randomName + ".jpg").putBytes(thumbData);
+
+                                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                            try {
+                                                String downloadthumbUri = taskSnapshot.getDownloadUrl().toString();
+                                                FindLocation();
+
+                                                    addresses = geocoder.getFromLocation(latitude, longitude, 1);
+
+                                                    //String address = addresses.get(0).getAddressLine(0);
+                                                    String address = addresses.get(0).getLocality() + ", " + addresses.get(0).getSubAdminArea() + ", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName();
+                                                    //String city = addresses.get(0).getLocality();
+                                                    String state = addresses.get(0).getAdminArea();
 
 
-                                            firebaseFirestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                Map<String, Object> postMap = new HashMap<>();
+                                                postMap.put("image_url", downloadUri);
+                                                postMap.put("image_thumb", downloadthumbUri);
+                                                postMap.put("post_category", type);
+                                                postMap.put("location", state);
+                                                postMap.put("desc", desc);
+                                                postMap.put("address", address);
+                                                postMap.put("latitude", latitude);
+                                                postMap.put("longitude", longitude);
+                                                postMap.put("user_id", current_user_id);
+                                                postMap.put("timestamp", FieldValue.serverTimestamp());
 
-                                                    if (task.isSuccessful()) {
 
-                                                        Toast.makeText(NewPostActivity.this, "Post was added", Toast.LENGTH_LONG).show();
-                                                        Intent mainIntent = new Intent(NewPostActivity.this, MainActivity.class);
-                                                        startActivity(mainIntent);
-                                                        finish();
+                                                firebaseFirestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentReference> task) {
 
-                                                    } else {
-                                                        Toast.makeText(NewPostActivity.this, "Sorry! we can not add this post", Toast.LENGTH_LONG).show();
+                                                        if (task.isSuccessful()) {
+
+                                                            Toast.makeText(NewPostActivity.this, "Post was added", Toast.LENGTH_LONG).show();
+                                                            Intent mainIntent = new Intent(NewPostActivity.this, MainActivity.class);
+                                                            startActivity(mainIntent);
+                                                            finish();
+
+                                                        } else {
+                                                            Toast.makeText(NewPostActivity.this, "Sorry! we can not add this post", Toast.LENGTH_LONG).show();
+
+                                                        }
+
+                                                        newPostProgress.setVisibility(View.INVISIBLE);
 
                                                     }
+                                                });
+                                            } catch (Exception add){
+                                                Toast.makeText(NewPostActivity.this, "Address can not be located! please try again", Toast.LENGTH_LONG).show();
 
-                                                    newPostProgress.setVisibility(View.INVISIBLE);
+                                                Intent mainIntent = new Intent(NewPostActivity.this, NewPostActivity.class);
+                                                startActivity(mainIntent);
+                                            }
 
-                                                }
-                                            });
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
+
                                         }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
 
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-
-                                        //Error handling
-
-                                    }
-                                });
+                                            Toast.makeText(NewPostActivity.this, "Address can not be located! please try again", Toast.LENGTH_LONG).show();
 
 
-                            } else {
+                                        }
+                                    });
 
-                                newPostProgress.setVisibility(View.INVISIBLE);
+
+                                } else {
+
+                                    newPostProgress.setVisibility(View.INVISIBLE);
+
+                                }
 
                             }
+                        });
 
-                        }
-                    });
 
+                    }
 
                 }
-
             }
-        });
+
+            });
+
 
 
     }
 
 
-        public void FindLocation () {
+    public static boolean isLocationEnabled(Context context) {
+        int locationMode = 0;
+        String locationProviders;
+
+        try {
+            locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+
+
+    }
+
+    public void FindLocation () {
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);

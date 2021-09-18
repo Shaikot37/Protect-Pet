@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -98,10 +99,10 @@ public class SetupActivity extends AppCompatActivity {
 
         //retrived the data
         firebaseFirestore.collection("Users").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-    @Override
-    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-           if(task.isSuccessful()){
-               if(task.getResult().exists()){
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().exists()) {
                         String name = task.getResult().getString("username");
                         String image = task.getResult().getString("imageURL");
                         String status = task.getResult().getString("bio");
@@ -109,32 +110,40 @@ public class SetupActivity extends AppCompatActivity {
                         setupName.setText(name);
                         bio.setText(status);
 
-                   RequestOptions placeholderRequest = new RequestOptions();
-                   Glide.with(SetupActivity.this).setDefaultRequestOptions(placeholderRequest ).load(image).into(setupImage);
-                  // Toast.makeText(SetupActivity.this,"data exixts",Toast.LENGTH_LONG).show();
-               }
+                        RequestOptions placeholderRequest = new RequestOptions();
+                        Glide.with(SetupActivity.this).setDefaultRequestOptions(placeholderRequest).load(image).into(setupImage);
+                        // Toast.makeText(SetupActivity.this,"data exixts",Toast.LENGTH_LONG).show();
+                    }
 
-           }else{
-               String error = task.getException().getMessage();
-               Toast.makeText(SetupActivity.this,"Error:"+error, Toast.LENGTH_LONG).show();
+                } else {
+                    String error = task.getException().getMessage();
+                    Toast.makeText(SetupActivity.this, "Error:" + error, Toast.LENGTH_LONG).show();
 
-           }
-        setupProgress.setVisibility(View.INVISIBLE);
-        setupBtn.setEnabled(true);
-                                   }
-});
+                }
+                setupProgress.setVisibility(View.INVISIBLE);
+                setupBtn.setEnabled(true);
+            }
+        });
 
 //save data into firebase
-        setupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
+        if (!isLocationEnabled(SetupActivity.this)) {
 
+            Toast.makeText(SetupActivity.this, "Turn on your location please!", Toast.LENGTH_LONG).show();
+
+        }
+        else{
+
+        setupBtn.setOnClickListener(new View.OnClickListener() {
+
+
+            @Override
             public void onClick(View view) {
                 final String user_name = setupName.getText().toString();
                 final String biography = bio.getText().toString();
                 if (!TextUtils.isEmpty(user_name) && !TextUtils.isEmpty(biography) && mainImageURI != null) {
-                setupProgress.setVisibility(View.VISIBLE);
+                    setupProgress.setVisibility(View.VISIBLE);
 
-                if(isChanged) {
+                    if (isChanged) {
 
                         user_id = firebaseAuth.getCurrentUser().getUid();
                         StorageReference image_path = storageReference.child("profile_images").child(user_id + ".jpg");
@@ -153,17 +162,16 @@ public class SetupActivity extends AppCompatActivity {
 
                             }
                         });
+                    } else {
+                        storeFirestore(null, user_name, biography);
                     }
-                else{
-                    storeFirestore(null,user_name,biography);
-                }
                 }
             }
 
             private void storeFirestore(Task<UploadTask.TaskSnapshot> task, String user_name, String biography) {
                 Uri download_uri;
 
-                if(task != null) {
+                if (task != null) {
 
                     download_uri = task.getResult().getDownloadUrl();
 
@@ -172,7 +180,6 @@ public class SetupActivity extends AppCompatActivity {
                     download_uri = mainImageURI;
 
                 }
-
 
 
                 FindLocation();
@@ -193,7 +200,7 @@ public class SetupActivity extends AppCompatActivity {
                 userMap.put("id", user_id);
                 userMap.put("username", user_name);
                 userMap.put("imageURL", download_uri.toString());
-                userMap.put("bio",biography);
+                userMap.put("bio", biography);
                 userMap.put("location", state);
                 userMap.put("status", "offline");
                 userMap.put("search", user_name.toLowerCase());
@@ -206,7 +213,7 @@ public class SetupActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
 
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
 
                             Toast.makeText(SetupActivity.this, "The user Settings are updated.", Toast.LENGTH_LONG).show();
                             Intent mainIntent = new Intent(SetupActivity.this, MainActivity.class);
@@ -215,7 +222,7 @@ public class SetupActivity extends AppCompatActivity {
 
                         } else {
 
-                             String error = task.getException().getMessage();
+                            String error = task.getException().getMessage();
                             Toast.makeText(SetupActivity.this, "(FIRESTORE Error) : " + error, Toast.LENGTH_LONG).show();
 
                         }
@@ -227,6 +234,8 @@ public class SetupActivity extends AppCompatActivity {
 
             }
         });
+
+    }
 
 
 
@@ -258,6 +267,23 @@ public class SetupActivity extends AppCompatActivity {
             }
 
         });
+
+    }
+
+    public static boolean isLocationEnabled(Context context) {
+        int locationMode = 0;
+        String locationProviders;
+
+        try {
+            locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+
 
     }
 
